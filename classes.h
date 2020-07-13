@@ -137,10 +137,10 @@ class mesh{
         int *indices_dirich;
         condition *dirichlet_list;        
     public:
-        void setParameters(float u_bar,float nu, float rho, float f_x, float f_y, float f_z){
-            parameters[P_1]=u_bar;
+        void setParameters( float f_x, float f_y, float f_z){
+            /*parameters[P_1]=u_bar;
             parameters[P_2]=nu;
-            parameters[P_3]=rho;
+            parameters[P_3]=rho;*/
             parameters[EXTERNAL_FORCE_X]=f_x;
             parameters[EXTERNAL_FORCE_Y]=f_y;
             parameters[EXTERNAL_FORCE_Z]=f_z;
