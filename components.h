@@ -289,7 +289,7 @@ Matrix createLocalM(int e,mesh &m){
     //Matrix A
     Matrix g_matrix, Alpha, Beta, gA_matrix,gC_matrix,gG_matrix;
 
-    u_bar = m.getParameter(ADJECTIVE_VELOCITY);
+    //u_bar = m.getParameter(ADJECTIVE_VELOCITY);
     Determinant = calculateLocalD(e,m);
     J = calculateLocalJ(e,m);
 
@@ -313,7 +313,7 @@ Matrix createLocalM(int e,mesh &m){
     //Matrix K
     Matrix Alpha_t,Beta_t;
 
-    nu = m.getParameter(DYNAMIC_VISCOSITY);
+    //nu = m.getParameter(DYNAMIC_VISCOSITY);
     Ve = calculateLocalVolume(e,m);
     
     float real_k = (float) (1)/(6*Determinant*Determinant);
@@ -332,7 +332,7 @@ Matrix createLocalM(int e,mesh &m){
     
     //Matrix G
     
-    rho = m.getParameter(DENSITY);
+    //rho = m.getParameter(DENSITY);
     float real_g = (float) (J/(24*Determinant));
 
     
@@ -395,7 +395,7 @@ Vector createLocalb(int e,mesh &m){
         exit(EXIT_FAILURE);
     }
     
-    zeroes(b_aux,16);
+    zeroes(b_aux,24);
     productMatrixVector(g_matrix,f,b_aux);
     productRealVector(J/24,b_aux,b);
     
