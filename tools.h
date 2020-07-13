@@ -170,29 +170,36 @@ void writeResults(mesh m,Vector T,char *filename){
         if(d_index != -1)
             file << i+1 << " " << dirich[d_index].getValue() << " ";
         else{
-            int T_index = getIndex(i+1,4*nn-nd,non_dirich_indices);
+            int T_index = getIndex(i+1,6*nn-nd,non_dirich_indices);
             file << i+1 << " " << T.at(T_index) << " ";
         }
         d_index = getIndex(i+1+nn,nd,dirich_indices);
         if(d_index != -1)
             file << dirich[d_index].getValue() << "\n";
         else{
-            int T_index = getIndex(i+1+nn,4*nn-nd,non_dirich_indices);
+            int T_index = getIndex(i+1+nn,6*nn-nd,non_dirich_indices);
             file << T.at(T_index) << "\n";
         }
     }
 
     file << "End values\n";
 
-    file << "\nResult \"Pressure\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"p\"\nValues\n";
+    file << "\nResult \"Pressure\" \"Load Case 1\" 1 Vector OnNodes\nComponentNames \"p1\" \"p2\" \"p3\"\nValues\n";
 
     for(int i=0;i<nn;i++){
-        int d_index = getIndex(i+1+2*nn,nd,dirich_indices);
+        int d_index = getIndex(i+1,2*nd,dirich_indices);
         if(d_index != -1)
-            file << i+1 << " " << dirich[d_index].getValue() << "\n";
+            file << i+1 << " " << dirich[d_index].getValue() << " ";
         else{
-            int T_index = getIndex(i+1+2*nn,4*nn-nd,non_dirich_indices);
-            file << i+1 << " " << T.at(T_index) << "\n";
+            int T_index = getIndex(i+1,6*nn-nd,non_dirich_indices);
+            file << i+1 << " " << T.at(T_index) << " ";
+        }
+        d_index = getIndex(i+1+nn,2*nd,dirich_indices);
+        if(d_index != -1)
+            file << dirich[d_index].getValue() << "\n";
+        else{
+            int T_index = getIndex(i+1+nn,6*nn-nd,non_dirich_indices);
+            file << T.at(T_index) << "\n";
         }
     }
 
