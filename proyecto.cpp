@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    char filename[150] ;
+    char filename[150] ;//= "Example";
     strcpy(filename,argv[1]);
 
     vector<Matrix> localKs;
