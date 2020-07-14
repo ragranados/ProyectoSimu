@@ -84,6 +84,44 @@ void calculateBeta(Matrix &B){
     B.at(2).at(11) = 1;
 }
 
+float calculateZ(mesh m, int i){
+	element e = m.getElement(i);
+    node n1 = m.getNode(e.getNode1()-1);
+    node n2 = m.getNode(e.getNode2()-1);
+    node n3 = m.getNode(e.getNode3()-1);
+    node n4 = m.getNode(e.getNode4()-1);
+
+    float z1, z2, z3, z4;
+    z1 = n1.getZ();
+    z2 = n2.getZ();
+    z3 = n3.getZ();
+    z4 = n4.getZ();
+    
+    return -(3*z1-z2-z3-z4);
+}
+
+calculateZ2(mesh m, int i){
+	element e = m.getElement(i);
+    node n1 = m.getNode(e.getNode1()-1);
+    node n2 = m.getNode(e.getNode2()-1);
+    node n3 = m.getNode(e.getNode3()-1);
+    node n4 = m.getNode(e.getNode4()-1);
+
+    float z1, z2, z3, z4;
+    z1 = n1.getZ();
+    z2 = n2.getZ();
+    z3 = n3.getZ();
+    z4 = n4.getZ();
+    
+    float x1, x2, x3, x4;
+    x1 = n1.getX();
+    x2 = n2.getX();
+    x3 = n3.getX();
+    x4 = n4.getX();
+    
+    return (12*x1-4*x2-4*x3-4*x4+3*z1-z2-z3-z4-12) ;
+}
+
 void calculateOmega(Matrix &C){
     zeroes(C,3,4);
     C.at(0).at(0) = -1; C.at(0).at(1) = 1; C.at(0).at(2) = 0; C.at(0).at(3) = 0;
@@ -125,10 +163,10 @@ void calculateGammaA(Matrix &G1, mesh m, int i){
     z4 = n4.getZ();
 
     float x1, x2, x3, x4;
-    x1 = n1.getY();
-    x2 = n2.getY();
-    x3 = n3.getY();
-    x4 = n4.getY();
+    x1 = n1.getX();
+    x2 = n2.getX();
+    x3 = n3.getX();
+    x4 = n4.getX();
 
 	G1.at(0).at(0) = -(3*x1-x2-x3-x4+3*z1-z2-z3-z4-5);   	G1.at(0).at(1) = 0;   									G1.at(0).at(2) = 0;
 	G1.at(1).at(0) = -(4*x1-2*x2-x3-x4+4*z1-2*z2-z3-z4-5);  G1.at(1).at(1) = 0;   									G1.at(1).at(2) = 0; 
@@ -160,10 +198,10 @@ void calculateGammaC(Matrix &G1, mesh m, int i){
     z4 = n4.getZ();
 
     float x1, x2, x3, x4;
-    x1 = n1.getY();
-    x2 = n2.getY();
-    x3 = n3.getY();
-    x4 = n4.getY();
+    x1 = n1.getX();
+    x2 = n2.getX();
+    x3 = n3.getX();
+    x4 = n4.getX();
 
 	G1.at(0).at(0) = -(6*x1-2*x2-2*x3-2*x4+3*z1-z2-z3-z4-25);  	G1.at(0).at(1) = 0;   										G1.at(0).at(2) = 0;
 	G1.at(1).at(0) = -(8*x1-4*x2-2*x3-2*x4+4*z1-2*z2-z3-z4-25); G1.at(1).at(1) = 0;   										G1.at(1).at(2) = 0; 
@@ -195,10 +233,10 @@ void calculateGammaG(Matrix &G1, mesh m, int i){
     z4 = n4.getZ();
 
     float x1, x2, x3, x4;
-    x1 = n1.getY();
-    x2 = n2.getY();
-    x3 = n3.getY();
-    x4 = n4.getY();
+    x1 = n1.getX();
+    x2 = n2.getX();
+    x3 = n3.getX();
+    x4 = n4.getX();
 
 	G1.at(0).at(0) = -(6*x1-2*x2-2*x3-2*x4+3*z1-z2-z3-z4-25);  	G1.at(0).at(1) = 0;   										G1.at(0).at(2) = 0;
 	G1.at(1).at(0) = -(8*x1-4*x2-2*x3-2*x4+4*z1-2*z2-z3-z4-25); G1.at(1).at(1) = 0;   										G1.at(1).at(2) = 0; 
@@ -230,10 +268,10 @@ void calculateGammaE(Matrix &G1, mesh m, int i){
     z4 = n4.getZ();
 
     float x1, x2, x3, x4;
-    x1 = n1.getY();
-    x2 = n2.getY();
-    x3 = n3.getY();
-    x4 = n4.getY();
+    x1 = n1.getX();
+    x2 = n2.getX();
+    x3 = n3.getX();
+    x4 = n4.getX();
 
 	G1.at(0).at(0) = -(3*z1-z2-z3-z4);  						G1.at(0).at(1) = 0;   										G1.at(0).at(2) = 0;
 	G1.at(1).at(0) = -(4*z1-2*z2-z3-z4); 						G1.at(1).at(1) = 0;   										G1.at(1).at(2) = 0; 
@@ -308,20 +346,25 @@ Matrix createLocalM(int e,mesh &m){
     calculateAlpha(e,Alpha,m);
     calculateBeta(Beta);
     productRealMatrix(real_a, productMatrixMatrix(gA_matrix,productMatrixMatrix(Alpha,Beta,3,3,12),12,3,12),matrixA);
+    
+    
 
 
     //Matrix K
-    Matrix Alpha_t,Beta_t;
+    Matrix Alpha_t,Beta_t,Beta_t_z,Beta_t_z2;
 
     //nu = m.getParameter(DYNAMIC_VISCOSITY);
     Ve = calculateLocalVolume(e,m);
     
-    float real_k = (float) (1)/(6*Determinant*Determinant);
+    float real_k = (float) (1)/(24*Determinant*Determinant);
 
     transpose(Alpha,Alpha_t);
     transpose(Beta,Beta_t);
 
-    productRealMatrix(real_k,productMatrixMatrix(Beta_t,productMatrixMatrix(Alpha_t,productMatrixMatrix(Alpha,Beta,3,3,12),3,3,12),12,3,12),matrixK);
+ 	productRealMatrix(calculateZ(m,e),Beta_t,Beta_t_z);
+    //productRealMatrix(real_k,productMatrixMatrix(Beta_t,productMatrixMatrix(Alpha_t,productMatrixMatrix(Alpha,Beta,3,3,12),3,3,12),12,3,12),matrixK);
+    productRealMatrix(real_k,productMatrixMatrix(Beta_t_z,productMatrixMatrix(Alpha_t,productMatrixMatrix(Alpha,Beta,3,3,12),3,3,12),12,3,12),matrixK);
+   
 
 	//Matrix C
 	Matrix Omega;
@@ -356,8 +399,9 @@ Matrix createLocalM(int e,mesh &m){
     productRealMatrix(real_e,productMatrixMatrix(Beta_t,productMatrixMatrix(Alpha_t,gG_matrix_t,3,3,12),12,3,12),matrixE);
     
     //matrix w
-    float real_w = (float) (1)/(6*Determinant*Determinant);
-    productRealMatrix(real_w,productMatrixMatrix(Beta_t,productMatrixMatrix(Alpha_t,productMatrixMatrix(Alpha,Beta,3,3,12),3,3,12),12,3,12),matrixW);
+    float real_w = (float) (1)/(24*Determinant*Determinant);
+    productRealMatrix(calculateZ2(m,e),Beta_t,Beta_t_z2);
+    productRealMatrix(real_w,productMatrixMatrix(Beta_t_z2,productMatrixMatrix(Alpha_t,productMatrixMatrix(Alpha,Beta,3,3,12),3,3,12),12,3,12),matrixW);
 
     //Matrix M
     Matrix M;
