@@ -138,9 +138,9 @@ int getIndex(int v, int s, Vector vec){
 }
 
 int *createNonDirichletIndices(int nn,int nd,int *dirich_indices){
-    int *ndi = new int[4*nn-nd];
+    int *ndi = new int[6*nn-nd];
     int pos = 0;
-    for(int i=1;i<=4*nn;i++)
+    for(int i=1;i<=6*nn;i++)
         if(!findIndex(i,nd,dirich_indices)){
             ndi[pos] = i;
             pos++;
@@ -165,28 +165,28 @@ void writeResults(mesh m,Vector T,char *filename){
 
     file << "Result \"Velocity\" \"Load Case 1\" 1 Vector OnNodes\nComponentNames \"u\" \"v\" \"w\" \nValues\n";
 
-    for(int i=0;i<nn;i++){
+     for(int i=0;i<nn;i++){
         int d_index = getIndex(i+1,nd,dirich_indices);
-        if(d_index != -1){
+        if(d_index != -1)
             file << i+1 << " " << dirich[d_index].getValue() << " ";
-        }else{
+        else{
             int T_index = getIndex(i+1,4*nn-nd,non_dirich_indices);
             file << i+1 << " " << T.at(T_index) << " ";
         }
         d_index = getIndex(i+1+nn,nd,dirich_indices);
         if(d_index != -1)
-            file << dirich[d_index].getValue() << "\n";
+            file << dirich[d_index].getValue() << " ";
         else{
             int T_index = getIndex(i+1+nn,4*nn-nd,non_dirich_indices);
+            file << T.at(T_index) << " ";
+        }
+        d_index = getIndex(i+1+2*nn,nd,dirich_indices);
+        if(d_index != -1)
+            file << dirich[d_index].getValue() << "\n";
+        else{
+            int T_index = getIndex(i+1+2*nn,4*nn-nd,non_dirich_indices);
             file << T.at(T_index) << "\n";
         }
-        /*d_index = getIndex(i+2+nn,nd,dirich_indices);
-        if(d_index != -1)
-            file << i+1 << " " << dirich[d_index].getValue() << "\n";
-        else{
-            int T_index = getIndex(i+2+nn,4*nn-nd,non_dirich_indices);
-            file << i+1 << " " << T.at(T_index) << "\n";
-        }*/
     }
 
     file << "End values\n";
@@ -194,18 +194,25 @@ void writeResults(mesh m,Vector T,char *filename){
     file << "\nResult \"Pressure\" \"Load Case 1\" 1 Vector OnNodes\nComponentNames \"p1\" \"p2\" \"p3\" \nValues\n";
 
     for(int i=0;i<nn;i++){
-        int d_index = getIndex(i+1,2*nd,dirich_indices);
+        int d_index = getIndex(i+1+3*nn,nd,dirich_indices);
         if(d_index != -1)
             file << i+1 << " " << dirich[d_index].getValue() << " ";
         else{
-            int T_index = getIndex(i+1,4*nn-nd,non_dirich_indices);
+            int T_index = getIndex(i+1+3*nn,6*nn-nd,non_dirich_indices);
             file << i+1 << " " << T.at(T_index) << " ";
         }
-        d_index = getIndex(i+1+nn,2*nd,dirich_indices);
+        d_index = getIndex(i+1+4*nn,2*nd,dirich_indices);
+        if(d_index != -1)
+            file << dirich[d_index].getValue() << " ";
+        else{
+            int T_index = getIndex(i+1+4*nn,6*nn-nd,non_dirich_indices);
+            file << T.at(T_index) << " ";
+        }
+        d_index = getIndex(i+1+5*nn,2*nd,dirich_indices);
         if(d_index != -1)
             file << dirich[d_index].getValue() << "\n";
         else{
-            int T_index = getIndex(i+1+nn,6*nn-nd,non_dirich_indices);
+            int T_index = getIndex(i+1+5*nn,6*nn-nd,non_dirich_indices);
             file << T.at(T_index) << "\n";
         }
     }
