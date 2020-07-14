@@ -14,12 +14,7 @@ void zeroes(Matrix &M,int n){
         M.push_back(row);
     }
 }
-float getRandom(){
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(0.0, 1.0);
-    return dis(gen);
-}
+
 void zeroes(Matrix &M,int n,int m){
     for(int i=0;i<n;i++){
         vector<float> row(m,0.0);
